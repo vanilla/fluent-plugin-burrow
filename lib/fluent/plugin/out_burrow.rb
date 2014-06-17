@@ -19,7 +19,7 @@ class Fluent::BurrowPlugin < Fluent::Output
   config_param :add_prefix, :string, :default => nil          # Add a prefix to the existing tag
 
   # Optional - record format
-  config_param :action, :string, :default => 'replace'        # The action to take once key parsing is complete
+  config_param :action, :string, :default => 'inplace'        # The action to take once key parsing is complete
   config_param :keep_key, :bool, :default => false            # Keep original source key (only valid with 'overlay' and 'replace' actions)
 
   # Optional - time format
