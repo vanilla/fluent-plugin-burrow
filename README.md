@@ -1,7 +1,7 @@
 fluent-plugin-burrow
 ====================
 
-This plugin for [Fluentd](http://fluentd.org) allows to extract a single key from an existing event and re-parse it with
+This plugin for [Fluentd](http://fluentd.org) allows to extract a single key from an existing record and re-parse it with
 a supplied format. A new event is then emitted, with the record modified by the now-decoded key's value.
 
 ## Motivation
@@ -80,7 +80,8 @@ format as Fluent::TextParser (and in_tail):
 - ltsv
 
 ### tag
-optional
+
+`optional`
 
 When this even is re-emitted, change its tag to this setting's value.
 
