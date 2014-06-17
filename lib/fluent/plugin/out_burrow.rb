@@ -62,9 +62,9 @@ class Fluent::BurrowPlugin < Fluent::Output
   config_param :add_prefix, :string, :default => nil          # Add a prefix to the existing tag
 
   # Optional - record format
+  config_param :action, :string, :default => 'replace'        # The action to take once key parsing is complete
   config_param :keep_time, :bool, :default => false           # Keep the original event's "time" key
-  config_param :overlay, :bool, :default => false             # Overlay new record instead of replace
-  config_param :keep_key, :bool, :default => false            # Keep original source key
+  config_param :keep_key, :bool, :default => false            # Keep original source key (only valid with 'overlay' and 'replace' actions)
 
   # Optional - time format
   config_param :record_time_key, :string, :default => 'time'  # Allow a custom time field in the sub-event
@@ -90,6 +90,17 @@ class Fluent::BurrowPlugin < Fluent::Output
     end
     if @add_prefix
       @added_prefix_string = @add_prefix.chomp('.') + '.'
+    end
+
+    # Validate action
+    actions = ['replace','overlay','inplace']
+    if not actions.include? @action
+      raise Fluent::ConfigError, "Invalid 'action', must be one of #{actions.join(',')}"
+    end
+
+    # Validate action-based restrictions
+    if @action == 'inplace' and @keep_key
+      raise Fluent::ConfigError, "Specifying 'keep_key' with action 'inplace' is not supported"
     end
 
     # Prepare fluent's built-in parser
@@ -143,11 +154,24 @@ class Fluent::BurrowPlugin < Fluent::Output
       r = values;
 
       # Overlay new record on top of original record?
-      if @overlay
-        # First delete source key for new record?
+      case @action
+      when 'inplace'
+        r = record.merge({@key_name => r})
+      when 'overlay'
+        r = record.merge(r)
+      when 'replace'
+        # noop
+      end
+
+      if ['overlay','replace'].include? @action
         if not @keep_key
           record.delete(@key_name)
         end
+      end
+
+      if @overlay
+        # First delete source key for new record?
+        
 
         # Then overlay
         r = record.merge(r)
