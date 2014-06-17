@@ -98,8 +98,8 @@ tag. This setting automatically adds a trailing period `.` to its value before s
 When this event is re-emitted, prepend this prefix to the source tag and use the resulting string as the new event's tag.
 This setting automatically adds a trailing period `.` to its value before prepending.
 
-#### One of the 'tag', 'remove_prefix', or 'add_prefix' settings is required.
-**'remove_prefix' and 'add_prefix' can co-exist together.**
+**One of the `tag`, `remove_prefix`, or `add_prefix` settings is required.**
+**`remove_prefix` and `add_prefix` can co-exist together.**
 
 ### action
 
