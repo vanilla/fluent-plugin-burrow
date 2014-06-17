@@ -122,16 +122,8 @@ class Fluent::BurrowPlugin < Fluent::Output
 
       if ['overlay','replace'].include? @action
         if not @keep_key
-          record.delete(@key_name)
+          r.delete(@key_name)
         end
-      end
-
-      if @overlay
-        # First delete source key for new record?
-
-
-        # Then overlay
-        r = record.merge(r)
       end
 
       # Preserve 'time' key?
