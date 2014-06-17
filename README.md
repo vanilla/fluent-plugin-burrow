@@ -6,7 +6,7 @@ a supplied format. A new event is then emitted, with the record modified by the 
 
 ## Motivation
 
-out_burrow is designed to allow post-facto re-parsing of nested key elements.
+**out_burrow is designed to allow post-facto re-parsing of nested key elements.**
 
 For example, lets say your source application writes to syslog, but instead of plain string messages, it writes JSON
 encoded data. /var/log/syslog contains the following entry:
