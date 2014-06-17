@@ -1,51 +1,8 @@
 # Burrow Output Plugin
 # @author Tim Gunter <tim@vanillaforums.com>
 #
-# This plugin allows to extract a single key from an existing
-# event and replace the entire event with that key's value.
-#
-# If the sample event is:
-#
-# {
-#   "time": "2013-10-31 12:48:33",
-#   "message": {
-#     "name": "test",
-#     "age": 20,
-#     "height": 1.7
-#   }
-# }
-#
-# We can 'burrow' into the 'message' key and make its contents top level items
-#
-# <match raw.test.tag>
-#   type burrow
-#   key_name message
-#   format json
-#   keep_time true
-#   tag test.tag
-# </match>
-#
-# The resulting output will be
-#
-# {
-#   "time": "2013-10-31 12:48:33",
-#   "name": "test",
-#   "age": 20,
-#   "height": 1.7
-# }
-#
-# Note the "keep_time" command. This causes the new event to retain its "time"
-# key if it exists.
-#
-# Supported formats are the same as those supported by Fluent's TextParser:
-#    apache
-#    apache2
-#    nginx
-#    syslog
-#    json
-#    csv
-#    tsv
-#    ltsv
+# This plugin allows to extract a single key from an existing event and re-parse it with a given
+# format, and then re-emit a new event with the key's value replaced, or with the whole record replaced.
 #
 
 class Fluent::BurrowPlugin < Fluent::Output
@@ -63,13 +20,13 @@ class Fluent::BurrowPlugin < Fluent::Output
 
   # Optional - record format
   config_param :action, :string, :default => 'replace'        # The action to take once key parsing is complete
-  config_param :keep_time, :bool, :default => false           # Keep the original event's "time" key
   config_param :keep_key, :bool, :default => false            # Keep original source key (only valid with 'overlay' and 'replace' actions)
 
   # Optional - time format
-  config_param :record_time_key, :string, :default => 'time'  # Allow a custom time field in the sub-event
-  config_param :time_key, :string, :default => 'time'         # Allow a custom time field in the sub-event
-  config_param :time_format, :string, :default => nil         # Allow a custom time format for the new event
+  config_param :keep_time, :bool, :default => false           # Keep the original event's "time" key
+  config_param :record_time_key, :string, :default => 'time'  # Allow a custom time field in the record
+  config_param :time_key, :string, :default => 'time'         # Allow a custom time field in the sub-record
+  config_param :time_format, :string, :default => nil         # Allow a custom time format for the new record
 
   # Parse config hash
   def configure(conf)
@@ -171,7 +128,7 @@ class Fluent::BurrowPlugin < Fluent::Output
 
       if @overlay
         # First delete source key for new record?
-        
+
 
         # Then overlay
         r = record.merge(r)
