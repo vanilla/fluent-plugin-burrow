@@ -1,0 +1,5 @@
+#
+# This example demonstrates a method of extracting the "message" portion of an encoded syslog event and bringing the
+# data in that portion into the main record scope.
+# 
+#
