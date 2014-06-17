@@ -83,7 +83,7 @@ format as Fluent::TextParser (and in_tail):
 
 `optional`
 
-When this even is re-emitted, change its tag to this setting's value.
+When this event is re-emitted, change its tag to this setting's value.
 
 ### remove_prefix
 
