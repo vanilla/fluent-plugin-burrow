@@ -1,12 +1,12 @@
 fluent-plugin-burrow
 ====================
 
-This plugin allows to extract a single key from an existing event and re-parse it with a supplied format. A new event
-is then emitted, with the record modified by the now-decoded key's value.
+This plugin for [Fluentd](http://fluentd.org) allows to extract a single key from an existing event and re-parse it with
+a supplied format. A new event is then emitted, with the record modified by the now-decoded key's value.
 
 ## Motivation
 
-out_burrow for [Fluentd](http://fluentd.org). It is designed to allow post-facto re-parsing of nested key elements.
+out_burrow is designed to allow post-facto re-parsing of nested key elements.
 
 For example, lets say your source application writes to syslog, but instead of plain string messages, it writes JSON
 encoded data. /var/log/syslog contains the following entry:
