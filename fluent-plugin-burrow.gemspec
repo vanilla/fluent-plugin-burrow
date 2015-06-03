@@ -3,6 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "fluent-plugin-burrow"
+  s.description = "Extract a single key (in formats Fluent can natively understand) from an event and re-emit a new event that replaces the entire original record with that key's values."
   s.version     = "1.0"
   s.license     = "MIT"
   s.authors     = ["Tim Gunter"]
