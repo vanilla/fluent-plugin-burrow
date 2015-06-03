@@ -157,6 +157,37 @@ instead of 'inplace', the resulting record would have been:
 }
 ```
 
+- prefix
+
+Insert the decoded data in the original record, using the `data_prefix` key. In our example above, if 'prefix' was used
+instead of 'inplace' with 'data_prefix' = 'data', the resulting record would have been:
+
+```
+{
+    "host":"app1",
+    "ident":"5012162",
+    "data": {
+        "event":"csrf_failure",
+        "msg":"Invalid transient key for System.",
+        "username":"System",
+        "userid":"1",
+        "ip":"192.34.93.74",
+        "method":"GET",
+        "domain":"http://timgunter.ca",
+        "path":"/dashboard/settings",
+        "tags":["csrf","failure"],
+        "accountid":5009392,
+        "siteid":5012162
+    }
+}
+```
+
+### data_prefix
+
+`required` if you use 'action' = 'prefix' (defaults to `nil`)
+
+The prefix used to insert the decoded data in the message.
+
 ### keep_key
 
 `optional` and defaults to `false`

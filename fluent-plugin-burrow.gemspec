@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "fluent-plugin-burrow"
-  s.version     = "1.0"
+  s.version     = "1.1"
   s.license     = "MIT"
   s.authors     = ["Tim Gunter"]
   s.email       = ["tim@vanillaforums.com"]
