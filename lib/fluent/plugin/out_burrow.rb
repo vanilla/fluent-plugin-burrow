@@ -14,6 +14,7 @@ class Fluent::BurrowPlugin < Fluent::Output
   config_param :format, :string
 
   # Optional - tag format
+  config_param :data_prefix, :string, :default => nil         # The prefix used for the existing data
   config_param :tag, :string, :default => nil                 # Create a new tag for the re-emitted event
   config_param :remove_prefix, :string, :default => nil       # Remove a prefix from the existing tag
   config_param :add_prefix, :string, :default => nil          # Add a prefix to the existing tag
@@ -50,7 +51,7 @@ class Fluent::BurrowPlugin < Fluent::Output
     end
 
     # Validate action
-    actions = ['replace','overlay','inplace']
+    actions = ['replace','overlay','inplace','prefix']
     if not actions.include? @action
       raise Fluent::ConfigError, "Invalid 'action', must be one of #{actions.join(',')}"
     end
@@ -58,6 +59,9 @@ class Fluent::BurrowPlugin < Fluent::Output
     # Validate action-based restrictions
     if @action == 'inplace' and @keep_key
       raise Fluent::ConfigError, "Specifying 'keep_key' with action 'inplace' is not supported"
+    end
+    if @action == 'prefix' and not @data_prefix
+      raise Fluent::ConfigError, "You must specify 'data_prefix' with action 'prefix'"
     end
 
     # Prepare fluent's built-in parser
@@ -118,10 +122,13 @@ class Fluent::BurrowPlugin < Fluent::Output
         r = record.merge(r)
       when 'replace'
         # noop
+      when 'prefix'
+        r = record.merge({@data_prefix => r})
       end
 
-      if ['overlay','replace'].include? @action
-        if not @keep_key
+      # Keep the key?
+      if ['overlay','replace','prefix'].include? @action
+        if not @keep_key and not r.nil? and r.has_key?(@key_name)
           r.delete(@key_name)
         end
       end
