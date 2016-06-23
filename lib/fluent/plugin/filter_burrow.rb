@@ -61,51 +61,45 @@ class BurrowFilter < Filter
 
 
   def filter(tag, time, record)
-
-    # Extract raw key value
     raw_value = record[@key_name]
+    if raw_value then
+      new_time, new_values = nil, nil
+      @parser.parse(raw_value) do |parsed_time, parsed_values|
+        new_time   = parsed_time
+        new_values = parsed_values
+      end
 
-    # Remember original time key, or raw event time
-    raw_time = record[@record_time_key]
+      if new_values then
+        original_time = record[@record_time_key]
+        new_time ||= original_time
 
-    # Try to parse it according to 'format'
-    t      = nil
-    values = nil
+        # Overlay new record on top of original record?
+        new_record = case @action
+        when 'inplace'
+          record.merge({@key_name => new_values})
+        when 'overlay'
+          record.merge(new_values)
+        when 'replace'
+          new_values
+        when 'prefix'
+          record.merge({@data_prefix => new_values})
+        end
 
-    if raw_value
-      @parser.parse(raw_value) {|_t, _v| t = _t, values = _v}
-    end
+        # Keep the key?
+        if ['overlay','replace','prefix'].include? @action
+          if not @keep_key and new_record.has_key?(@key_name)
+            new_record.delete(@key_name)
+          end
+        end
 
-    # Set new event's time to current time unless new time key was found in the sub-event
-    t ||= raw_time
+        # Preserve 'time' key?
+        if @keep_time
+          new_record[@record_time_key] = original_time
+        end
 
-    r = values;
-
-    # Overlay new record on top of original record?
-    case @action
-    when 'inplace'
-      r = record.merge({@key_name => r})
-    when 'overlay'
-      r = record.merge(r)
-    when 'replace'
-      # noop
-    when 'prefix'
-      r = record.merge({@data_prefix => r})
-    end
-
-    # Keep the key?
-    if ['overlay','replace','prefix'].include? @action
-      if not @keep_key and not r.nil? and r.has_key?(@key_name)
-        r.delete(@key_name)
+        new_record
       end
     end
-
-    # Preserve 'time' key?
-    if @keep_time
-      r[@record_time_key] = raw_time
-    end
-
-    r
   end
 
 end
