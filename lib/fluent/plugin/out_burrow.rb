@@ -5,6 +5,8 @@
 # format, and then re-emit a new event with the key's value replaced, or with the whole record replaced.
 #
 
+require 'fluent/parser'
+
 class Fluent::BurrowPlugin < Fluent::Output
   # Register type
   Fluent::Plugin.register_output('burrow', self)
@@ -140,7 +142,7 @@ class Fluent::BurrowPlugin < Fluent::Output
 
       # Emit event back to Fluent
       if r
-        Fluent::Engine.emit(tag, t, r)
+        router.emit(tag, t, r)
       end
     end
 
