@@ -1,6 +1,8 @@
 fluent-plugin-burrow
 ====================
 
+[![Open Issues](http://img.shields.io/github/issues/vanilla/fluent-plugin-burrow.svg?style=flat)](https://github.com/vanilla/fluent-plugin-burrow/issues) [![Pull Requests](http://img.shields.io/github/issues-pr/vanilla/fluent-plugin-burrow.svg?style=flat)](https://github.com/vanilla/fluent-plugin-burrow/pulls)
+
 This plugin for [Fluentd](http://fluentd.org) allows to extract a single key from an existing record and re-parse it with
 a supplied format. A new event is then emitted, with the record modified by the now-decoded key's value.
 
